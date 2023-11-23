@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flid - Home</title>
+</head>
+
+<script>
+function get_token(){
+    return localStorage.getItem("token");
+}
+function get_user_id(){
+    return localStorage.getItem("user_id");
+}
+function get_username(user_id){
+    let url = "/user/get?user_id=" + user_id;
+    fetch(url).then(response => response.json()).then(data => {
+        let username = data["username"];
+        return username;
+    });
+}
+function get_num_users(){
+    let url = "/user/get/num"
+    fetch(url).then(response => response.json()).then(data => {
+        let num_users = data["num_users"];
+        return num_users;
+    });
+}
+
+function get_user_transactions(){
+    let user_id = get_user_id();
+    let url = "/user/me/transactions?user_id=" + user_id + "&token=" + get_token();
+    
+    fetch(url).then(response => response.json()).then(data => {
+        console.log(data);
+        let owes = data["owes"]; //[[transaction_id, sender_id, receiver_id, amount, message], ...]]
+        let owed = data["owed"]; //[[transaction_id, sender_id, receiver_id, amount, message], ...]]
+        let total_sum = data["total_sum"];
+        document.getElementById("total_sum").innerHTML = "Total sum: " + total_sum;
+
+        //resolve user ids to usernames
+        let usernames = {}; //{"user_id": "username"}
+        for (let i = 0; i < owes.length; i++) {
+            let sender_id = owes[i][1];
+            let receiver_id = owes[i][2];
+            if (!(sender_id in usernames)){
+                let username = get_username(sender_id);
+                usernames[sender_id] = username;
+            }
+            if (!(receiver_id in usernames)){
+                let username = get_username(receiver_id);
+                usernames[receiver_id] = username;
+            }
+            owes[i][1] = usernames[sender_id];
+            owes[i][2] = usernames[receiver_id];
+        }
+        
+
+        
+
+        //set row background color to green if user owes money, red if user is owed money
+
+        for (let i = 0; i < owes.length; i++) {
+            //append to table
+            let row = document.createElement("tr");
+            row.style.backgroundColor = "red";
+            let cell1 = document.createElement("td");
+            let cell2 = document.createElement("td");
+            let cell3 = document.createElement("td");
+            let cell4 = document.createElement("td");
+            let cell5 = document.createElement("td");
+            cell1.innerHTML = owes[i][0];
+            cell2.innerHTML = owes[i][1];
+            cell3.innerHTML = owes[i][2];
+            cell4.innerHTML = owes[i][3];
+            cell5.innerHTML = owes[i][4];
+            row.appendChild(cell1);
+            row.appendChild(cell2);
+            row.appendChild(cell3);
+            row.appendChild(cell4);
+            row.appendChild(cell5);
+            document.getElementById("transactions").appendChild(row);
+        }
+        for (let i = 0; i < owed.length; i++) {
+            //append to table
+            let row = document.createElement("tr");
+            row.style.backgroundColor = "green";
+            let cell1 = document.createElement("td");
+            let cell2 = document.createElement("td");
+            let cell3 = document.createElement("td");
+            let cell4 = document.createElement("td");
+            let cell5 = document.createElement("td");
+            cell1.innerHTML = owed[i]["transaction_id"];
+            cell2.innerHTML = owed[i]["sender_id"];
+            cell3.innerHTML = owed[i]["receiver_id"];
+            cell4.innerHTML = owed[i]["amount"];
+            cell5.innerHTML = owed[i]["message"];
+            row.appendChild(cell1);
+            row.appendChild(cell2);
+            row.appendChild(cell3);
+            row.appendChild(cell4);
+            row.appendChild(cell5);
+            document.getElementById("transactions").appendChild(row);
+        }
+    });
+}
+
+</script>
+<body>
+    <h1>Flid</h1>
+    <h2>Home</h2>
+
+    <h3>Username: <script>document.write(get_username())</script></h3>
+    <h3>Number of users: <script>document.write(get_num_users())</script></h3>
+
+    <h3>Transactions</h3>
+
+    <p id = "total_sum"></p>
+    <table id="transactions">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Sender ID</th>
+            <th>Receiver ID</th>
+            <th>Amount</th>
+            <th>Message</th>
+        </tr>
+        <script>get_user_transactions()</script>
+
+    
+</body>
+</html>

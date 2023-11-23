@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flid - Login</title>
+</head>
+
+<script>
+function login(){
+    var userIdentification = document.getElementById("loginForm").elements[0].value;
+    var password = document.getElementById("loginForm").elements[1].value;
+    
+    let url = "/auth/login?user_identification=" + userIdentification + "&password=" + password;
+    fetch(url).then(response => response.json()).then(data => {
+        let token = data["token"];
+        let user_id = data["user_id"];
+        if(token != null){
+            localStorage.setItem("token", token);
+            localStorage.setItem("user_id", user_id);
+            window.location.href = "/home";
+        } else {
+            alert("Invalid login");
+        }
+    });
+}
+</script>
+<body>
+    <h1>Flid</h1>
+
+    <h2 login>
+        <form id = "loginForm">
+            <input type="text" name="userIdentification" placeholder="Username / Email">
+            <input type="password" name="password" placeholder="Password">
+            <input type="button" value="Login" onclick="login()">
+        </form>
+    </h2>
+</body>
+</html>
