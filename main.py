@@ -124,9 +124,12 @@ async def get_user(user_id: int) -> JSONResponse:
 
 @app.get("/user/get/all")
 async def get_all_users() -> JSONResponse:
+    return {"status": "not implemented"}
+    #TODO implement this with rate limiting
     users = db.get_all_users()
     users = [{"id": user[0], "username": user[1], "email": user[3]} for user in users]
     return JSONResponse(status_code=200, content={"users": users})
+
 
 @app.get("/user/get/num")
 async def get_num_users() -> JSONResponse:
@@ -222,7 +225,7 @@ async def settle(user_id: int, token: str) -> JSONResponse:
             owes[user_id] = user_sum
         elif user_sum > 0:
             owed[user_id] = user_sum
-    
+    #{"owes": {user_id: sum}, "owed": {user_id: sum}
     return JSONResponse(status_code=200, content={"owes": owes, "owed": owed})
 
 # owes functions

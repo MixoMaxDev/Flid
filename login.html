@@ -24,16 +24,126 @@ function login(){
         }
     });
 }
+
+function validate_login(event, source){
+    if(event.keyCode == 13){
+        login();
+    }
+}
+
 </script>
+
+<style>
+    :root {
+    --main-color : #33ccff;
+    --main-color-light : #ff99cc;
+    --main-color-dark : #0066cc;
+
+    --accent-color : #ffcc00;
+    --accent-color-light : #ffff4d;
+    --accent-color-dark : #b38f00;
+
+    --bg-color-light : #ffffff;
+    --bg-color-dark : #242245;
+
+    --border-color-light : #f1f1f1;
+    --border-color-dark : #555555;
+
+    --text-color-light : #000000;
+    --text-color-dark : #ffffff;
+
+    --confirm-color : ##4CAF50;
+    --confirm-color-light : #00ff00;
+    --confirm-color-dark : #009900;
+
+    --cancel-color : #cc0000;
+    --cancel-color-light : #ff0000;
+    --cancel-color-dark : #990000;
+
+    background: var(--bg-color-dark);
+    }
+
+.vbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+form {
+    border: 3px solid var(--border-color-dark);
+    background: linear-gradient(to bottom right, var(--main-color-dark) 0%, var(--main-color-light) 100%);
+    border-radius: 25px;
+}
+label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    margin: 4px 0;
+}
+input[type=text], input[type=password] {
+    width: 90%;
+    padding: 12px 20px;
+    margin: 16px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+
+
+    background-color: transparent;
+    border: 3px solid var(--border-color-dark);
+    border-radius: 25px;
+}
+input[type=button] {
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 16px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 25px;
+}
+input[type=button]:hover {
+    opacity: 0.8;
+    
+    background-color: var(--main-color-dark);
+}
+.container {
+    padding: 16px;
+}
+#LoginFormDiv {
+    text-align: center;
+    margin: auto;
+    width: 35%;
+    padding: 10px;
+
+}
+</style>
 <body>
     <h1>Flid</h1>
 
-    <h2 login>
-        <form id = "loginForm">
-            <input type="text" name="userIdentification" placeholder="Username / Email">
-            <input type="password" name="password" placeholder="Password">
-            <input type="button" value="Login" onclick="login()">
+
+    <div id="LoginFormDiv">
+        <form id="loginForm">
+
+            <label for="user_identification">Username or email:</label><br>
+            <input type="text" id="user_identification" name="user_identification", onkeypress="validate_login(event, 'user_identification')"><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password", onkeypress="validate_login(event, 'password')"><br>
+
+
+            <div class="hbox">
+                <input type="button" value="Register" onclick="window.location.href = '/register'", style="background-color: var(--accent-color-dark);">
+                <input type="button" value="Login" onclick="login()", style="background-color: var(--main-color-dark);">
         </form>
-    </h2>
+    </div>
+
 </body>
 </html>

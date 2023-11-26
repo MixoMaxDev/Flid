@@ -91,7 +91,7 @@ class DBWrapper:
     
     # Owes functions
     
-    def get_owes_by_sender_id(self, sender_id):
+    def get_owes_by_sender_id(self, sender_id) -> list[tuple[int, int, int, float, str]]:
         cmd = """SELECT * FROM owes WHERE sender_id = ?;"""
         self.cursor.execute(cmd, (sender_id,))
         return self.cursor.fetchall()
